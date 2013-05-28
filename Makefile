@@ -13,7 +13,7 @@ PORT = /dev/ttyUSB0
 # Leave these alone.
 EXTRA_FLAGS = -D _FS_TINY=0
 EXTRA_FLAGS += -D _USE_LFN=1
-#EXTRA_FLAGS += -D XMEM_MULTIPLE_APP=16
+EXTRA_FLAGS += -D XMEM_MULTIPLE_APP=16
 
 # You should not need to change this, but I place it here if you want to play.
 # These are the defaults for the optimization of the flash and ram
@@ -22,8 +22,6 @@ EXTRA_FLAGS += -D _USE_LFN=1
 # The following are the libraries used.
 LIB_DIRS =
 LIB_DIRS += ../libraries/xmem
-#LIB_DIRS += ../libraries/USB_Host_Shield_2.0
-#LIB_DIRS += ../libraries/generic_storage
 
 # And finally, the part that brings everything together for you.
 include ../Arduino_Makefile_master/_Makefile.master
