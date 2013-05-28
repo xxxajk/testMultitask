@@ -86,7 +86,7 @@ void setup() {
         xmem::StartTask(t1);
         uint8_t t2 = xmem::SetupTask(task_A);
         xmem::StartTask(t2);
-        LEDnext_time = millis() - 1;
+        LEDnext_time = millis() + 1;
 
 
 }
