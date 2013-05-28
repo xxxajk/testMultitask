@@ -13,7 +13,7 @@ PORT = /dev/ttyUSB0
 # Leave these alone.
 EXTRA_FLAGS = -D _FS_TINY=0
 EXTRA_FLAGS += -D _USE_LFN=1
-EXTRA_FLAGS += -D XMEM_MULTIPLE_APP=16
+EXTRA_FLAGS += -D USE_MULTIPLE_APP_API=16
 
 # You should not need to change this, but I place it here if you want to play.
 # These are the defaults for the optimization of the flash and ram
