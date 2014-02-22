@@ -15,33 +15,37 @@
  * the Sleep() function.
  *
  */
-
-#include <avr/pgmspace.h>
+#include <Arduino.h>
 #include <xmem.h>
-#include <avrpins.h>
+#include <avr/pgmspace.h>
 #include <stdio.h>
-
-#define led 13
-
+volatile uint8_t xmem_putc_lock = 0;
 // Uncomment to test xmem::Sleep()
 //#define TEST_TIMING
 
 static FILE mystdout;
+#if defined(CORE_TEENSY)
+volatile int flop = 0;
+#else
 volatile int brightness = 128; // how bright the LED is
 volatile int fadeAmount = 8; // how many points to fade the LED by
-
+#endif
 extern "C" unsigned int freeHeap();
 
 // Fun! Serial stuff is thread safe!
 
 static int my_putc(char c, FILE *t) {
+        xmem::Lock_Acquire(&xmem_putc_lock);
         Serial.write(c);
+        xmem::Lock_Release(&xmem_putc_lock);
+        return 0;
 }
 
 void loop() {
         // Look mom! No hands!
 #ifndef TEST_TIMING
-        printf("L");
+        printf("L ");
+        printf("%lu\r\n", millis());
 #endif
 }
 
@@ -49,7 +53,7 @@ void loop() {
 // tasks
 
 void task_A(void) {
-        for (;;) {
+        for(;;) {
 #ifndef TEST_TIMING
                 printf("A");
 #endif
@@ -57,10 +61,10 @@ void task_A(void) {
 }
 
 void task_B(void) {
-        for (;;) {
+        for(;;) {
 #ifdef TEST_TIMING
                 uint32_t x = millis();
-                while (x == millis());
+                while(x == millis());
                 x = millis();
                 xmem::Sleep(30);
                 uint32_t y = millis();
@@ -69,43 +73,60 @@ void task_B(void) {
                 printf("B");
                 xmem::Sleep(30);
 #endif
+#if defined(CORE_TEENSY)
+                flop++;
+                if((flop & 0x40)) {
+                        digitalWrite(LED_BUILTIN, HIGH);
+                } else {
+                        digitalWrite(LED_BUILTIN, LOW);
+                }
+#else
                 // set the brightness of pin 9:
-                analogWrite(led, brightness);
+                analogWrite(LED_BUILTIN, brightness);
 
                 // change the brightness for next time through the loop:
                 brightness = brightness + fadeAmount;
 
                 // reverse the direction of the fading at the ends of the fade:
-                if (brightness <= 0) {
+                if(brightness <= 0) {
                         brightness = 0;
                         fadeAmount = -fadeAmount;
                 }
-                if (brightness >= 255) {
+                if(brightness >= 255) {
                         brightness = 255;
                         fadeAmount = -fadeAmount;
                 }
+#endif
         }
 }
 
 void task_C(void) {
-        for (;;) {
+        for(;;) {
 #ifndef TEST_TIMING
                 printf("C");
 #endif
         }
 }
+
 void setup() {
         // declare pin 9 to be an output:
-        pinMode(led, OUTPUT);
-        analogWrite(led, 0);
-        pinMode(2, OUTPUT);
+        pinMode(LED_BUILTIN, OUTPUT);
+#if defined(CORE_TEENSY)
+        digitalWrite(LED_BUILTIN, HIGH);
+#else
+        analogWrite(LED_BUILTIN, 0);
+#endif
+        //pinMode(2, OUTPUT);
         mystdout.put = my_putc;
         mystdout.get = NULL;
         mystdout.flags = _FDEV_SETUP_WRITE;
         mystdout.udata = 0;
         stdout = &mystdout;
+        while(!Serial);
         Serial.begin(115200);
-
+#if defined(CORE_TEENSY)
+        digitalWrite(LED_BUILTIN, LOW);
+#endif
         // Note! tasks do NOT actually start here. They start after the return to main()!
         // The values t[1-3] are thrown out. You can save them to a global if you need to.
 
