@@ -7,10 +7,12 @@ This small sketch tests:
 	xmem2 multitasking
 
 IMPORTANT REQUIREMENTS!
-1. An Arduino Mega1280 or Mega2560.
+1. An Arduino Mega1280 or Mega2560 or Teensy++ 2.0.
 2. Populated external BANKED RAM: Andy Brown or Rugged Circuits RAM shield.
 
-My development platform is Arduino Mega1280, and Rugged Circuits QuadRAM.
-I do not own the Andy Brown shield. If you do, you may need to do some 
-adjustments. Patches are welcome, of course.
+My development platform is Arduino Mega1280/Mega2560/Teensy++2.0, 
+and Rugged Circuits QuadRAM. I do not own the Andy Brown shield. 
+You may need to do some adjustments for hardware I do not own.
+If you want to send me an Andy Brown shield, that would help me support you better.
+Patches are welcome, of course.
 </pre>
