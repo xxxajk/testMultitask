@@ -11,6 +11,6 @@ IMPORTANT REQUIREMENTS!
 2. Populated external BANKED RAM: Andy Brown or Rugged Circuits RAM shield.
 
 My development platform is Arduino Mega1280, and Rugged Circuits QuadRAM.
-I do not own a Mega2560, or the Andy Brown shield. If you do, you may need to
-do some adjustments. Patches are welcome, of course.
+I do not own the Andy Brown shield. If you do, you may need to do some 
+adjustments. Patches are welcome, of course.
 </pre>
